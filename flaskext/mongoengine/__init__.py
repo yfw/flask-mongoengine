@@ -20,23 +20,26 @@ def _include_mongoengine(obj):
 
 class MongoEngine(object):
 
-    def __init__(self, app=None):
+    def __init__(self, app=None, config_prefix='MONGO'):
 
         _include_mongoengine(self)
 
         self.Document = Document
 
         if app is not None:
-            self.init_app(app)
+            self.init_app(app, config_prefix)
 
-    def init_app(self, app):
+    def init_app(self, app, config_prefix):
+
+        def key(suffix):
+            return '%s_%s' % (config_prefix, suffix)
 
         conn_settings = {
-            'db': app.config.get('MONGODB_DB', None),
-            'username': app.config.get('MONGODB_USERNAME', None),
-            'password': app.config.get('MONGODB_PASSWORD', None),
-            'host': app.config.get('MONGODB_HOST', None),
-            'port': int(app.config.get('MONGODB_PORT', 0)) or None
+            'db': app.config.get(key('DB'), None),
+            'username': app.config.get(key('USERNAME'), None),
+            'password': app.config.get(key('PASSWORD'), None),
+            'host': app.config.get(key('HOST'), None),
+            'port': int(app.config.get(key('PORT'), 0)) or None
         }
 
         conn_settings = dict([(k, v) for k, v in conn_settings.items() if v])
