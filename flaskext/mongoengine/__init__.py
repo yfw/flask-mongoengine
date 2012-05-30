@@ -44,7 +44,7 @@ class MongoEngine(object):
 
         conn_settings = dict([(k, v) for k, v in conn_settings.items() if v])
 
-        self.connection = mongoengine.connect(**conn_settings)
+        self.connection = mongoengine.connect(alias=config_prefix, **conn_settings)
 
 
 class BaseQuerySet(QuerySet):
